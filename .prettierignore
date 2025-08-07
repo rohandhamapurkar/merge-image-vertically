@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+build/
+dist/
+
+# Lock files
+package-lock.json
+yarn.lock
+
+# Git
+.git/
+
+# Logs
+*.log
+
+# Coverage
+coverage/
+
+# ESLint cache
+.eslintcache
