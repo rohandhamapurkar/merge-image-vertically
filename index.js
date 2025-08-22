@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 const sharp = require('sharp');
 const path = require('path');
 const fs = require('fs').promises;
@@ -131,6 +132,18 @@ class ImageMerger {
   }
 }
 
+function lastDirName(input) {
+  // 1) ensure it's a string and trim
+  const s = String(input).trim();
+  // 2) remove wrapping single/double quotes if present
+  const unquoted = s.replace(/^['"]+|['"]+$/g, '');
+  // 3) use Windows semantics so backslashes are separators on any OS
+  const w = path.win32;
+  const name = w.basename(w.normalize(unquoted));
+  // 4) in case only the last segment had quotes
+  return name.replace(/^['"]+|['"]+$/g, '');
+}
+
 // CLI usage
 if (require.main === module) {
   const args = process.argv.slice(2);
@@ -155,7 +168,8 @@ if (require.main === module) {
       if (args[0] === '--dir') {
         // Directory mode
         const directory = args[1];
-        const outputPath = args[2] || './merged_images.png';
+        const outputPath = args[2] || `./${lastDirName(directory)}.png`;
+        console.log(outputPath);
 
         const images = await merger.findImagesInDirectory(directory);
         if (images.length === 0) {
